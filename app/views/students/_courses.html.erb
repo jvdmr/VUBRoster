@@ -1,0 +1,11 @@
+<table>
+	<% @student.all_courses.each do |c| %>
+		<tr>
+      <td><%= link_to "Remove", c.remove_path(@student.name), :remote => true %></td>
+			<td><%= link_to c.name, c.path %></td>
+		</tr>
+	<% end %>
+  <tr>
+    <td colspan=2><%= link_to "Add custom course", edit_custom_course_path(@student.name) %></td>
+  </tr>
+</table>

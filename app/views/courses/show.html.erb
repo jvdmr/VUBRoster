@@ -1,0 +1,24 @@
+<h1><%= @course.name %></h1>
+
+<table>
+  <tr>
+    <th>Lectures</th>
+    <th>day</th>
+    <th>start</th>
+    <th>end</th>
+    <th>room</th>
+    <th>weeks</th>
+    <th>given by</th>
+  </tr>
+  <% @course.lectures.each do |l| %>
+    <tr>
+      <td><%= l.name %></td>
+      <td><%= l.day %></td>
+      <td><%= l.starts %></td>
+      <td><%= l.ends %></td>
+      <td><%= l.room %></td>
+      <td><%= l.weeks %></td>
+      <td><%= l.prof.name %></td>
+    </tr>
+  <% end %>
+</table>
