@@ -1,5 +1,6 @@
 class CoursesController < ApplicationController
   require 'curb'
+  require 'i18n'
   require 'hpricot'
 
   private
@@ -110,7 +111,8 @@ class CoursesController < ApplicationController
       Hash[@courses.sort].each do |name, lectures|
         course = Course.find_by_id_or_name(name) || Course.create(:name => name)
         lectures.each do |l|
-          prof = Prof.find_by_id_or_name(l[6]) || Prof.create(:name => l[6])
+          profname = I18n.transliterate l[6]
+          prof = Prof.find_by_id_or_name(profname) || Prof.create(:name => profname)
           l = l.map{|v| v.gsub(/&nbsp;/," ").gsub(/^\s*|\s*$/,"")}
           if l[1] && l[2] && l[3] && (l[1] != "") && (l[2] != "") && (l[3] != "") && (l[2].to_i != 0) && (l[3].to_i != 0)
             lecture_inserts << "(\"#{l[0].gsub(/"/,"'")}\", "+
