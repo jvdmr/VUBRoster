@@ -1,0 +1,3 @@
+
+page.insert_html :bottom, 'lectures', :partial => "custom_lecture"
+page.replace_html 'add_link', link_to("Add", add_custom_lecture_path(@nr + 1), :remote => true)

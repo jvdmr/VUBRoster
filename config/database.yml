@@ -1,0 +1,15 @@
+
+development:
+  adapter: mysql
+  database: uurrooster
+  username: jovdmeer
+  password: 02_Dec86
+  host: localhost
+
+production:
+  adapter: mysql
+  database: uurrooster
+  username: jovdmeer
+  password: 02_Dec86
+  host: localhost
+

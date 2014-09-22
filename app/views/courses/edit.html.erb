@@ -1,0 +1,42 @@
+<h1>Editing course</h1>
+
+<% form_for @course, :url => save_custom_course_path(@student.name, @course.id) do |f| %>
+  <%= hidden_field_tag 'course[student_id]', @student.id %>
+  <p>
+    Name: <%= text_field :course, :name %>
+  </p>
+
+  <p>
+    <table id="lectures" name="lectures">
+      <tr>
+        <th>Name</th>
+        <th>Room</th>
+        <th>Weeks</th>
+        <th>Day</th>
+        <th>Starts</th>
+        <th>Ends</th>
+      </tr>
+      <% nr = 0 %>
+      <% @course.lectures.each do |lecture| %>
+        <tr id="lectures_<%= nr %>">
+          <%= hidden_field_tag "lectures[#{nr}][id]", lecture.id %>
+          <td><%= text_field_tag "lectures[#{nr}][name]", lecture.name %></td>
+          <td><%= text_field_tag "lectures[#{nr}][room]", lecture.room %></td>
+          <td><%= text_field_tag "lectures[#{nr}][weeks]", lecture.weeks %></td>
+          <td><%= text_field_tag "lectures[#{nr}][day]", lecture.day %></td>
+          <td><%= text_field_tag "lectures[#{nr}][starts]", lecture.starts %></td>
+          <td><%= text_field_tag "lectures[#{nr}][ends]", lecture.ends %></td>
+          <td><%= link_to "Remove", remove_custom_lecture_path(nr, lecture.id), :remote => true %></td>
+        </tr>
+        <% nr += 1 %>
+      <% end %>
+    </table>
+    <div id="add_link"><%= link_to "Add", add_custom_lecture_path(nr), :remote => true %></div>
+  </p>
+
+  <p>
+    <%= f.submit "Update" %>
+  </p>
+<% end %>
+
+<%= link_to 'Back', show_path(@student.name) %>

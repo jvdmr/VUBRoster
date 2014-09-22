@@ -1,0 +1,15 @@
+<h1>All Students</h1>
+
+<table>
+  <tr>
+    <th>Name</th>
+  </tr>
+
+<% for student in @students %>
+  <tr>
+    <td><%= link_to student.name, show_path(student.name) %></td>
+  </tr>
+<% end %>
+</table>
+
+<%= link_to "New student", edit_path %>

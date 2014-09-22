@@ -1,0 +1,17 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  weeks: MyString
+  day: 1
+  starts: 1
+  ends: 1
+  room: MyString
+  custom_course_id: 1
+
+two:
+  weeks: MyString
+  day: 1
+  starts: 1
+  ends: 1
+  room: MyString
+  custom_course_id: 1

@@ -1,0 +1,11 @@
+<h1>View Lecture</h1>
+
+<p>course: <%= link_to @lecture.course.name, @lecture.course.path %></p>
+<p>prof: <%= link_to @lecture.prof.name, prof_path(@lecture.prof.id) %></p>
+<p>name: <%= @lecture.name %></p>
+<p>day: <%= @lecture.day %></p>
+<p>starts: <%= @lecture.starts %></p>
+<p>ends: <%= @lecture.ends %></p>
+<p>weeks: <%= @lecture.weeks %></p>
+<p>room: <%= @lecture.room %></p>
+

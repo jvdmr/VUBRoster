@@ -1,0 +1,135 @@
+<p>
+  <b>Name:</b>
+  <%=h @student.name %>
+</p>
+
+<%#<p>%>
+<%#  date used: <%= @currenttime.strftime "%A %d %B %Y" +|%>
+<%#</p>%>
+<p>
+  currently showing <%= @week ? "week " + @week.to_s : "all weeks" %>
+  <form method=POST action="<%= show_path(@student.name) %>">
+    show week: (0 for all)
+    <input id="week" name="week" value="<%= @currentweek %>" />
+    <input type=submit value="show" />
+  </form>
+  <form method=POST action="<%= show_week_path(@student.name, (@week.to_i - 1) % 52) %>">
+    <input type=submit value="prev" />
+  </form>
+  <form method=POST action="<%= show_week_path(@student.name, (@week.to_i + 1) % 52) %>">
+    <input type=submit value="next" />
+  </form>
+</p>
+
+<% lectures = @student.lectures(@week) %>
+<% @time_start = lectures.empty? ? 800 : lectures.map{|l| l.starts}.min - 100 %>
+<% @time_end = lectures.empty? ? 1800 : lectures.map{|l| l.ends}.max + 100 %>
+<table border = 1>
+	<tr>
+		<td style="background:#dd0;">
+			day \ time
+		</td>
+		<% time = @time_start %>
+		<% shifts = [30, 70] %>
+		<% while time < @time_end do %>
+			<td style="background:#dd0;text-align:center;">
+				<%= sprintf "%d:%02d", time / 100, time % 100 %>
+			</td>
+			<% time += shifts.first %>
+			<% shifts << shifts.shift %>
+		<% end %>
+	</tr>
+
+	<% days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"] %>
+	<% days.each_with_index do |day, day_i| %>
+		<% lectures_of_the_day = [lectures.select{|l| l.day == day_i}] %>
+
+		<% if !lectures_of_the_day.last.empty? %>
+			<%# this piece divides the day in different tracks when there's things overlapping %>
+			<% overlap = lectures_of_the_day.last.map{|a| lectures_of_the_day.last.map{|b| [a, b]}} %>
+			<% overlap = overlap.inject{|a,b| a + b} %>
+			<% overlap = overlap.select{|a,b| a.overlaps? b} %>
+			<% while !overlap.empty? do %>
+				<% result = [] %>
+				<% overlap.each do |c| %>
+					<% begin %>
+						<% result << c.last %>
+						<% lectures_of_the_day.last.reject!{|lecture| lecture == c.last} %>
+					<% end unless result.member? c.first %>
+				<% end %>
+				<% lectures_of_the_day << result.uniq %>
+				<% overlap = lectures_of_the_day.last.map{|a| lectures_of_the_day.last.map{|b| [a, b]}}.inject{|a,b| a + b}.select{|a,b| a.overlaps? b} %>
+			<% end %>
+		<% end %>
+		<% lectures_of_the_day.reject!{|t| t.empty?} %>
+
+		<% shifts = [30, 70] %>
+		<% if lectures_of_the_day.empty? %>
+			<tr>
+				<td style="background:#dd0;">
+					<%=h day %>
+				</td>
+				<td colspan=<%= ((@time_end - @time_start)/50.0).ceil %> style="background:#f2f2f2;text-align: center;"><b>FREE!</b></td>
+			</tr>
+		<% else %>
+			<% lectures_of_the_day.each_with_index do |track, i| %>
+				<tr>
+					<% track.sort!{|a, b| a.starts <=> b.starts} %>
+					<% time = @time_start %>
+					<% if i == 0 %>
+						<td rowspan=<%= lectures_of_the_day.length %>
+							style="background:#dd0;">
+							<%=h day %>
+						</td>
+					<% end %>
+					<% track.each do |cur| %>
+						<% while time < cur.starts do %>
+              <td>&nbsp;</td>
+							<% time += shifts.first %>
+							<% shifts << shifts.shift %>
+						<% end %>
+            <% halfhours = ((cur.ends - cur.starts) / 50.0).ceil %>
+						<td colspan=<%= halfhours %>
+							style="background:#ccc;">
+							<table>
+								<tr>
+									<td colspan=2 id="course_name">
+										<%= link_to cur.name, cur.path %>
+									</td>
+								</tr>
+								<tr>
+									<td colspan=2 id="course_prof">
+										<%= link_to cur.prof.name, prof_path(cur.prof.id) if cur.prof %>
+									</td>
+								</tr>
+								<tr>
+									<td id="course_location">
+										<%=h cur.room %>
+									</td>
+									<td id="course_weeks" style="text-align:right;">
+										<%=h cur.weeks %>
+									</td>
+								</tr>
+							</table>
+						</td>
+						<% time = cur.ends %>
+            <% halfhours.times do %>
+              <% shifts << shifts.shift %>
+            <% end %>
+					<% end %>
+					<% shifts << shifts.shift if shifts.first == 30 and time % 100 == 30 %>
+					<% while time < @time_end do %>
+						<td>&nbsp;</td>
+						<% time += shifts.first %>
+						<% shifts << shifts.shift %>
+					<% end %>
+				</tr>
+			<% end %>
+		<% end %>
+	<% end %>
+
+</table>
+
+<%#<%= link_to 'Export to iCal', ical_path(@student) +| |%>
+<%= link_to 'Edit', edit_path(@student.name) %> |
+<%= link_to 'Back', index_path %>

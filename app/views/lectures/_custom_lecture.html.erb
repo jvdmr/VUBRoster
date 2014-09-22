@@ -1,0 +1,9 @@
+<tr id="lectures_<%= @nr %>">
+  <td><%= text_field_tag "lectures[#{@nr}][name]", @lecture.name %></td>
+  <td><%= text_field_tag "lectures[#{@nr}][room]", @lecture.room %></td>
+  <td><%= text_field_tag "lectures[#{@nr}][weeks]", @lecture.weeks %></td>
+  <td><%= text_field_tag "lectures[#{@nr}][day]", @lecture.day %></td>
+  <td><%= text_field_tag "lectures[#{@nr}][starts]", @lecture.starts %></td>
+  <td><%= text_field_tag "lectures[#{@nr}][ends]", @lecture.ends %></td>
+  <td><%= link_to "Remove", remove_custom_lecture_path(@nr, @lecture.id), :remote => true %></td>
+</tr>
