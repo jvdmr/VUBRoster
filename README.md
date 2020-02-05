@@ -1,4 +1,8 @@
-VUB Roster - Joris Vandermeersch <joris.vdmr@gmail.com>
+VUB Roster - Joris Vandermeersch
+
+ARCHIVED 2020-02-05
+-------------------
+
 
 Release 1.0.0
 -------------
